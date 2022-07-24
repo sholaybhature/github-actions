@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         id: build-cache
         with:
-          path: _build${{env.MIX_ENV}}/
+          path: _build/${{env.MIX_ENV}}/
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-${{ hashFiles(format('{0}{1}', github.workspace, '/config/dev.exs')) }}-v8
       - name: Get dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
