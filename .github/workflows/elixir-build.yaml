@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         id: build-cache
         with:
-          path: _build
+          path: _build${{env.MIX_ENV}}/
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-v8
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
@@ -67,12 +67,13 @@ jobs:
       - name: Reconcile deps
         run: |
           mix deps.get
+      - name: Check Formatting
+        run: mix format --check-formatted
+      - name: Check Credo
+        run: mix credo
       - name: Run Tests
         run: |
-          mix test & 
-          mix format --check-formatted &
-          mix credo
-          wait
+          mix test
       - name: Test Coverage
         if: ${{ inputs.flag_test_coverage }}
         run: mix test --cover
