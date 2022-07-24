@@ -67,28 +67,12 @@ jobs:
       - name: Reconcile deps
         run: |
           mix deps.get
-  run_formatter:
-    needs: build_test
-    name: mix format
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Check Formatting
-        run: mix format --check-formatted
-  run_linter:
-    needs: build_test
-    name: mix credo
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Check Credo
-        run: mix credo
-  run_tests:
-    needs: build_test
-    name: mix test
-    runs-on: ubuntu-latest
-    steps:
       - name: Run Tests
         run: |
-          mix test
+          mix test & 
+          mix format --check-formatted &
+          mix credo
+          wait
       - name: Test Coverage
         if: ${{ inputs.flag_test_coverage }}
         run: mix test --cover
